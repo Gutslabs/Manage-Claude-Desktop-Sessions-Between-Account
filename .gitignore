@@ -1,0 +1,8 @@
+# Never commit Claude app data or local session backups
+claude-code-sessions/
+backup-claude-code-sessions-*/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.vscode/
