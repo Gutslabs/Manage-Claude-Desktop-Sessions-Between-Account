@@ -53,13 +53,19 @@ if [[ ! -d "${session_root}" ]]; then
   exit 1
 fi
 
-mapfile -t leaf_dirs < <(find "${session_root}" -mindepth 2 -maxdepth 2 -type d | sort)
+leaf_dirs=()
+while IFS= read -r dir; do
+  leaf_dirs+=("${dir}")
+done < <(find "${session_root}" -mindepth 2 -maxdepth 2 -type d | sort)
 if [[ ${#leaf_dirs[@]} -lt 2 ]]; then
   echo "Expected at least 2 account/org session directories under ${session_root}" >&2
   exit 1
 fi
 
-mapfile -t source_files < <(find "${session_root}" -type f -name 'local_*.json' | sort)
+source_files=()
+while IFS= read -r file; do
+  source_files+=("${file}")
+done < <(find "${session_root}" -type f -name 'local_*.json' | sort)
 if [[ ${#source_files[@]} -eq 0 ]]; then
   echo "No local session files found under ${session_root}" >&2
   exit 1
