@@ -4,17 +4,18 @@ Sync `Claude Code` local sessions across multiple Claude Desktop accounts on the
 
 ## Status
 
-Windows only for now. macOS support is planned soon.
+Windows and macOS are supported.
 
 ## What it does
 
 Claude Desktop stores local Claude Code sessions under:
 
 ```text
-%APPDATA%\Claude\claude-code-sessions\<accountId>\<orgId>\local_*.json
+Windows: %APPDATA%\Claude\claude-code-sessions\<accountId>\<orgId>\local_*.json
+macOS:   ~/Library/Application Support/Claude/claude-code-sessions/<accountId>/<orgId>/local_*.json
 ```
 
-This script finds every `local_*.json` session file and copies missing ones into the other account/org session folders, so the same local sessions become visible from multiple Claude accounts on the same Windows install.
+These scripts find every `local_*.json` session file and copy missing ones into the other account/org session folders, so the same local sessions become visible from multiple Claude accounts on the same machine.
 
 ## What it does not do
 
@@ -24,7 +25,7 @@ This script finds every `local_*.json` session file and copies missing ones into
 
 ## Requirements
 
-- Windows only for now
+- Windows or macOS
 - Claude Desktop installed
 - At least two Claude account/org session folders already created locally
 
@@ -32,8 +33,12 @@ This script finds every `local_*.json` session file and copies missing ones into
 
 - `sync-claude-local-sessions.ps1`: main sync script for Windows
 - `Claude Session Sync.bat`: double-click launcher for Windows users
+- `sync-claude-local-sessions.sh`: main sync script for macOS
+- `Claude Session Sync.command`: double-click launcher for macOS
 
 ## Usage
+
+### Windows
 
 ### Option 1: Double-click
 
@@ -63,6 +68,36 @@ To skip that:
 powershell -ExecutionPolicy Bypass -File .\sync-claude-local-sessions.ps1 -SkipBackup
 ```
 
+### macOS
+
+Run from Terminal:
+
+```bash
+chmod +x ./sync-claude-local-sessions.sh
+./sync-claude-local-sessions.sh
+```
+
+Dry run:
+
+```bash
+chmod +x ./sync-claude-local-sessions.sh
+./sync-claude-local-sessions.sh --dry-run
+```
+
+Skip backup:
+
+```bash
+chmod +x ./sync-claude-local-sessions.sh
+./sync-claude-local-sessions.sh --skip-backup
+```
+
+Double-click launcher:
+
+```bash
+chmod +x "./Claude Session Sync.command"
+open "./Claude Session Sync.command"
+```
+
 ## Safety
 
 - Default behavior creates a backup before writing
@@ -72,7 +107,7 @@ powershell -ExecutionPolicy Bypass -File .\sync-claude-local-sessions.ps1 -SkipB
 
 ## How it works
 
-1. Detect every account/org leaf folder under `%APPDATA%\Claude\claude-code-sessions`
+1. Detect every account/org leaf folder under Claude Desktop's local `claude-code-sessions` directory
 2. Collect every `local_*.json` file found there
 3. Copy missing session files into the other leaf folders
 4. Leave existing files untouched
